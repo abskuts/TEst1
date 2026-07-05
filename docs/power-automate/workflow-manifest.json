@@ -1,0 +1,73 @@
+{
+  "solutionName": "SaveMySeatParkingBooking",
+  "portalUrl": "https://savemyseat.atkinsrealis.com/",
+  "cloudFlow": {
+    "name": "Parking Booking Scheduler",
+    "trigger": {
+      "type": "recurrence",
+      "frequency": "Day",
+      "interval": 1,
+      "time": "12:00",
+      "timeZone": "SET_ME"
+    },
+    "desktopFlowName": "Reserve Save My Seat Parking",
+    "notifications": {
+      "successSubject": "Parking booked successfully",
+      "noSlotSubject": "Parking booking not completed - no slot available",
+      "failureSubject": "Parking booking failed"
+    }
+  },
+  "desktopFlow": {
+    "inputs": {
+      "PortalUrl": "https://savemyseat.atkinsrealis.com/",
+      "PreferredRegion": "APAC",
+      "PreferredLocation": "Pune",
+      "VehicleNumber": "5822",
+      "ParkingDuration": "All Day",
+      "SlotListCsv": "301,302,303,304,305,306,307,308,309,310,311,312",
+      "MaxRetryCount": 3,
+      "ElementTimeoutSeconds": 20
+    },
+    "outputs": [
+      "BookingStatus",
+      "BookedSlot",
+      "ResultMessage",
+      "ConfirmationText",
+      "ScreenshotPath"
+    ],
+    "slotOrder": [
+      "301",
+      "302",
+      "303",
+      "304",
+      "305",
+      "306",
+      "307",
+      "308",
+      "309",
+      "310",
+      "311",
+      "312"
+    ],
+    "credentialNames": {
+      "username": "SaveMySeatUsername",
+      "password": "SaveMySeatPassword"
+    },
+    "selectors": {
+      "usernameField": "CAPTURE_IN_PAD",
+      "passwordField": "CAPTURE_IN_PAD",
+      "signInButton": "CAPTURE_IN_PAD",
+      "continueButton": "CAPTURE_IN_PAD",
+      "regionDropdown": "CAPTURE_IN_PAD",
+      "reserveParkingButton": "CAPTURE_IN_PAD",
+      "newParkingRequestButton": "CAPTURE_IN_PAD",
+      "locationDropdown": "CAPTURE_IN_PAD",
+      "vehicleField": "CAPTURE_IN_PAD",
+      "allDayOption": "CAPTURE_IN_PAD",
+      "slotContainer": "CAPTURE_IN_PAD",
+      "slotAvailability": "CAPTURE_IN_PAD",
+      "submitButton": "CAPTURE_IN_PAD",
+      "confirmationMessage": "CAPTURE_IN_PAD"
+    }
+  }
+}

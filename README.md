@@ -1,81 +1,57 @@
-# Parking Slot Auto-Booker
+# Save My Seat Power Automate Workflow
 
-Automatically books a 4-wheeler parking slot (301–312) every day at **12:00 PM** on the "Save My Seat" portal.
+This repository now documents a **Power Automate** solution for booking parking daily at **12:00 PM** on `https://savemyseat.atkinsrealis.com/`.
 
-## What the bot does
+## Workflow overview
 
-1. Navigates to the parking portal login page and logs in.
-2. Clicks the **Continue** button on the welcome screen.
-3. Checks the region dropdown — selects **APAC** if it is not already selected.
-4. Clicks **Reserve Parking**.
-5. Clicks **New Parking Request**.
-6. Selects **Pune** as the location.
-7. Sets the vehicle number to **5822**.
-8. Selects the **All Day** slot option.
-9. Picks the **first available slot between 301 and 312** and books it.
-10. Submits/confirms the booking.
+The implementation is split into two flows:
 
-## Requirements
+1. **Scheduled cloud flow**
+   - Runs every day at 12:00 PM
+   - Invokes a desktop flow
+   - Sends success/failure notification
+   - Logs the outcome
 
-- Python 3.10+
-- Google Chrome (installed automatically by Playwright)
+2. **Power Automate Desktop (PAD) flow**
+   - Opens the Save My Seat site
+   - Signs in with stored credentials
+   - Clicks **Continue**
+   - Ensures **APAC** is selected
+   - Clicks **Reserve Parking**
+   - Clicks **New Parking Request**
+   - Selects **Pune**
+   - Sets vehicle number to **5822**
+   - Selects **All Day**
+   - Books the first available slot from **301** to **312**
+   - Captures confirmation details and screenshot
 
-## Setup
+## Files
 
-```bash
-# 1. Clone the repo and enter it
-git clone https://github.com/abskuts/TEst1.git
-cd TEst1
+| File | Purpose |
+| --- | --- |
+| `/home/runner/work/TEst1/TEst1/docs/power-automate/cloud-flow.md` | Scheduled cloud flow design |
+| `/home/runner/work/TEst1/TEst1/docs/power-automate/desktop-flow.md` | PAD step-by-step implementation |
+| `/home/runner/work/TEst1/TEst1/docs/power-automate/workflow-manifest.json` | Variables, selectors, constants, outputs |
 
-# 2. Create and activate a virtual environment (recommended)
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
+## Key settings
 
-# 3. Install Python dependencies
-pip install -r requirements.txt
+- Portal URL: `https://savemyseat.atkinsrealis.com/`
+- Region: `APAC`
+- Location: `Pune`
+- Vehicle number: `5822`
+- Parking type: `All Day`
+- Slot order: `301` through `312`
 
-# 4. Install the Playwright browser
-playwright install chromium
+## Security
 
-# 5. Configure credentials
-cp .env.example .env
-# Edit .env and fill in PARKING_URL, PARKING_USERNAME, PARKING_PASSWORD
-```
+- Do not hardcode credentials in the desktop flow.
+- Store credentials in **Power Automate Desktop credential vault** or secure inputs/connections.
+- Keep browser selectors in PAD tied to stable element attributes where possible.
 
-## Configuration (`.env`)
+## Recommended implementation order
 
-| Variable           | Description                                    |
-|--------------------|------------------------------------------------|
-| `PARKING_URL`      | Full URL of the "Save My Seat" login page      |
-| `PARKING_USERNAME` | Your login email / username                    |
-| `PARKING_PASSWORD` | Your login password                            |
-
-## Running
-
-### Scheduled (runs every day at 12:00 PM)
-
-```bash
-python parking_bot.py
-```
-
-Keep this process running (e.g. in a `screen`/`tmux` session, or as a systemd service).
-
-### Run once immediately (for testing)
-
-```bash
-python parking_bot.py --now
-```
-
-## Logs
-
-The bot logs all steps to stdout with timestamps. Redirect to a file if needed:
-
-```bash
-python parking_bot.py >> parking.log 2>&1 &
-```
-
-## Notes
-
-- The bot runs in **headless** mode (no visible browser window).
-- If the slot-selector elements on the page use different HTML attributes than expected, you may need to adjust the selectors in `parking_bot.py` (Step 10 in `book_parking()`).
-- Slots 301–312 are tried **in order**; the first available one is booked.
+1. Build the PAD flow from `desktop-flow.md`
+2. Capture and update real selectors in `workflow-manifest.json`
+3. Create the scheduled cloud flow from `cloud-flow.md`
+4. Run one manual test
+5. Enable the daily 12:00 PM schedule
