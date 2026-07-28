@@ -4,13 +4,10 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - '**'
+  pull_request:
+    branches:
       - main
-    paths:
-      - 'WRAFCT_v1_2_4.py'
-      - 'WRAFCT_v1_4.spec'
-      - 'requirements.txt'
-      - 'build_windows_app.bat'
-      - '.github/workflows/build-windows-app.yml'
 
 jobs:
   build:
